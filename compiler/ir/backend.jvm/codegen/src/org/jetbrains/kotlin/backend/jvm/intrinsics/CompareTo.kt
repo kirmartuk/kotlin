@@ -60,9 +60,11 @@ object CompareTo : IntrinsicMethod() {
         signature: JvmMethodSignature,
         context: JvmBackendContext
     ): IrIntrinsicFunction {
+        val callee = expression.symbol.owner
+        val calleeParameter = callee.dispatchReceiverParameter ?: callee.extensionReceiverParameter!!
         val parameterType = comparisonOperandType(
-            expressionType(expression.dispatchReceiver ?: expression.extensionReceiver!!, context),
-            signature.valueParameters.single().asmType
+            context.typeMapper.mapType(calleeParameter.type),
+            signature.valueParameters.single().asmType,
         )
         return IrIntrinsicFunction.create(expression, signature, context, listOf(parameterType, parameterType)) {
             genInvoke(parameterType, it)

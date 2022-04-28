@@ -275,6 +275,9 @@ public class AsmUtil {
     }
 
     public static Type comparisonOperandType(Type left, Type right) {
+        if (!isPrimitive(left) || !isPrimitive(right)) {
+            throw new IllegalArgumentException("Cannot compute comparison operand type: " + left + ", " + right);
+        }
         if (left == Type.DOUBLE_TYPE || right == Type.DOUBLE_TYPE) return Type.DOUBLE_TYPE;
         if (left == Type.FLOAT_TYPE || right == Type.FLOAT_TYPE) return Type.FLOAT_TYPE;
         if (left == Type.LONG_TYPE || right == Type.LONG_TYPE) return Type.LONG_TYPE;
